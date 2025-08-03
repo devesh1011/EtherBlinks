@@ -16,7 +16,7 @@ const resolveIpfsUrl = (url: string) => {
   return url.replace('ipfs://', gateway);
 };
 
-
+// New endpoint to get action data for the frontend
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = params;
@@ -24,10 +24,37 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Missing action ID' }, { status: 400 });
     }
 
+    // Query by short_id instead of id
     const { data: action, error } = await supabase
       .from('actions')
       .select('*')
-      .eq('id', id)
+      .eq('short_id', id)
+      .single();
+
+    if (error || !action) {
+      throw new Error('Action configuration not found.');
+    }
+
+    // Return the full action data for the frontend
+    return NextResponse.json(action, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+// Legacy endpoint for metadata (keeping for backward compatibility)
+export async function PUT(request: NextRequest, { params }: RouteParams) {
+  try {
+    const { id } = params;
+    if (!id) {
+      return NextResponse.json({ error: 'Missing action ID' }, { status: 400 });
+    }
+
+    // Query by short_id instead of id
+    const { data: action, error } = await supabase
+      .from('actions')
+      .select('*')
+      .eq('short_id', id)
       .single();
 
     if (error || !action) {
@@ -74,7 +101,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
           console.error("Could not fetch dynamic NFT metadata:", e);
           // Fallback to static text if metadata fetching fails
           title = "Buy an NFT";
-          description = `You are about to buy NFT #${action.token_id} for ${action.price} ETH.`;
+          description = `You are about to buy NFT #${action.token_id} for ${action.price} XTZ.`;
           label = "Buy NFT";
         }
         break;
@@ -102,10 +129,11 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Missing action ID or user address' }, { status: 400 });
     }
 
+    // Query by short_id instead of id
     const { data: action, error } = await supabase
       .from('actions')
       .select('*')
-      .eq('id', id)
+      .eq('short_id', id)
       .single();
 
     if (error || !action) {
