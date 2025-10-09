@@ -1,0 +1,22 @@
+{
+  "network": "Etherlink Shadownet",
+  "chainId": 127823,
+  "timestamp": "2026-02-14T19:50:38.181Z",
+  "deployer": "0x9db2507a09137c9fbe3f9f5404d4858b5c67af6b",
+  "contracts": {
+    "SubscriptionManager": {
+      "address": "0x93344be5b4170ad7430c7096953d048a4a03c58c",
+      "constructorArgs": [
+        "0xdff6bf7fbcbba7142e0b091a14404080dca852bb",
+        "0x9db2507a09137c9fbe3f9f5404d4858b5c67af6b"
+      ]
+    }
+  },
+  "config": {
+    "usdcAddress": "0xdfF6Bf7FBCbbA7142e0B091a14404080DcA852BB",
+    "feeRecipient": "0x9db2507a09137c9fbe3f9f5404d4858b5c67af6b",
+    "protocolFeeBps": 250,
+    "minInterval": 60,
+    "maxInterval": 31536000
+  }
+}
