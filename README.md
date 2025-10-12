@@ -21,12 +21,11 @@ EtherBlink allows creators and businesses to:
 
 #### 1. **URL Shortening System**
 ```
-https://yourapp.com/a/{action-type}-{short-id}
+https://etherblinks.vercel.app/a/{action-type}-{short-id}
 ```
 
 **Examples:**
-- `https://yourapp.com/a/tip-jdahagecew` - Send a tip
-- `https://yourapp.com/a/nft_sale-abc123` - Buy an NFT
+- `https://etherblinks.vercel.app/a/tip-jdahagecew` - Send a tip
 
 **Features:**
 - **Readable**: Action type is visible in the URL
@@ -163,8 +162,8 @@ NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_project_id
 ### Installation
 ```bash
 # Clone repository
-git clone <repository-url>
-cd elinks
+git clone https://github.com/devesh1011/EtherBlinks
+cd EtherBlinks
 
 # Install dependencies
 npm install
