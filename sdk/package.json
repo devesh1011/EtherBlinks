@@ -1,0 +1,51 @@
+{
+  "name": "@etherblinks/sdk",
+  "version": "0.2.0",
+  "description": "Merchant SDK for EtherBlinks — checkout URLs, webhook verification, USDC helpers",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devesh1011/EtherBlinks.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://github.com/devesh1011/EtherBlinks/tree/main/packages/sdk#readme",
+  "bugs": "https://github.com/devesh1011/EtherBlinks/issues",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  }
+}
