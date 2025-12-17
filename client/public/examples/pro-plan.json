@@ -1,0 +1,12 @@
+{
+  "name": "Pro Plan",
+  "description": "Full access to all premium features with priority support",
+  "icon": "https://images.unsplash.com/photo-1614680376573-df3480f00c42?w=200&h=200&fit=crop",
+  "features": [
+    "Unlimited API calls",
+    "Priority support 24/7",
+    "Advanced analytics dashboard",
+    "Custom webhooks",
+    "Team collaboration (up to 10 members)"
+  ]
+}

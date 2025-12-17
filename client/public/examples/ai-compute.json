@@ -1,0 +1,12 @@
+{
+  "name": "AI Cloud Compute",
+  "description": "High-performance GPU instances for AI model training and inference",
+  "icon": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=200&h=200&fit=crop",
+  "features": [
+    "8x A100 GPUs - 80GB VRAM each",
+    "640GB total GPU memory",
+    "Fast NVMe storage (2TB)",
+    "10Gbps network bandwidth",
+    "99.9% uptime SLA"
+  ]
+}

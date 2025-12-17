@@ -1,0 +1,12 @@
+{
+  "rules": [
+    {
+      "pathPattern": "/a/**",
+      "apiPath": "/api/execute/**"
+    },
+    {
+      "pathPattern": "/dashboard/links/**",
+      "apiPath": "/api/create-action/**"
+    }
+  ]
+}

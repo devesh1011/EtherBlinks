@@ -1,0 +1,11 @@
+{
+  "name": "Starter Plan",
+  "description": "Perfect for individuals and small projects getting started",
+  "icon": "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop",
+  "features": [
+    "10,000 API calls per month",
+    "Email support",
+    "Basic analytics",
+    "1 team member"
+  ]
+}
