@@ -9,11 +9,13 @@ import {
   Settings,
   History,
   BarChart3,
+  TrendingUp,
   Code2,
   ShieldCheck,
   Cpu,
   RefreshCcw,
   BookOpen,
+  Bot,
 } from "lucide-react";
 
 import {
@@ -50,6 +52,17 @@ const sidebarItems: NavGroup[] = [
         icon: RefreshCcw,
       },
       {
+        title: "x402 Payments",
+        url: "/dashboard/x402",
+        icon: Bot,
+        isNew: true,
+      },
+      {
+        title: "x402 Demo",
+        url: "/demo/x402",
+        icon: Zap,
+      },
+      {
         title: "Wallet",
         url: "/dashboard/wallet",
         icon: Wallet,
@@ -64,6 +77,11 @@ const sidebarItems: NavGroup[] = [
         title: "Statistics",
         url: "/dashboard/stats",
         icon: BarChart3,
+      },
+      {
+        title: "Merchant Analytics",
+        url: "/dashboard/merchant-analytics",
+        icon: TrendingUp,
       },
       {
         title: "History",
