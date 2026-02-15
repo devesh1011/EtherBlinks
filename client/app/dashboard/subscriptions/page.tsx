@@ -19,6 +19,7 @@ import { useRevokePolicy } from "@/hooks/usePolicyManager";
 import { formatUnits } from "viem";
 import { useState } from "react";
 import { etherlinkShadownet } from "@/lib/wagmi";
+import { Button } from "@/components/ui/button";
 
 function formatInterval(seconds: number): string {
   const days = Math.floor(seconds / 86400);
@@ -129,16 +130,17 @@ export default function SubscriptionsPage() {
             )}
           </div>
         </div>
-        <button
+        <Button
           onClick={refetch}
           disabled={isLoading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-800/50 hover:bg-zinc-800 rounded-lg transition-colors disabled:opacity-50"
+          variant="shimmer"
+          size="sm"
         >
           <RefreshCcw
             className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
           />
           Refresh
-        </button>
+        </Button>
       </div>
 
       {/* Overview Stats */}

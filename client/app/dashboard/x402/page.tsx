@@ -24,6 +24,7 @@ import {
   Clock,
   Shield,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Endpoint {
   id: string;
@@ -124,7 +125,7 @@ export default function X402DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [activeTab, setActiveTab] = useState<"endpoints" | "payments" | "docs">(
-    "endpoints"
+    "endpoints",
   );
 
   // Create form state
@@ -138,7 +139,7 @@ export default function X402DashboardPage() {
   const fetchEndpoints = useCallback(async () => {
     if (!address) return;
     const res = await fetch(
-      `/api/x402/endpoints?merchant=${address}&active=false`
+      `/api/x402/endpoints?merchant=${address}&active=false`,
     );
     const data = await res.json();
     setEndpoints(data.endpoints || []);
@@ -245,7 +246,7 @@ export default function X402DashboardPage() {
   const settledPayments = payments.filter((p) => p.status === "settled");
   const totalRevenue = settledPayments.reduce(
     (sum, p) => sum + Number(p.amount) / 1_000_000,
-    0
+    0,
   );
   const uniquePayers = new Set(settledPayments.map((p) => p.payer_address))
     .size;
@@ -288,23 +289,25 @@ export default function X402DashboardPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={fetchAll}
             disabled={isLoading}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-800/50 hover:bg-zinc-800 rounded-lg transition-colors"
+            variant="shimmer"
+            size="sm"
           >
             <RefreshCcw
               className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
             />
             Refresh
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setShowCreateForm(!showCreateForm)}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-100 bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-colors"
+            variant="shimmer"
+            size="sm"
           >
             <Plus className="h-4 w-4" />
             New Endpoint
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -440,10 +443,11 @@ export default function X402DashboardPage() {
               />
             </div>
             <div className="flex gap-3">
-              <button
+              <Button
                 type="submit"
                 disabled={isCreating}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-100 bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-colors disabled:opacity-50"
+                variant="shimmer"
+                size="sm"
               >
                 {isCreating ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -451,14 +455,14 @@ export default function X402DashboardPage() {
                   <Plus className="h-4 w-4" />
                 )}
                 Create Endpoint
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={() => setShowCreateForm(false)}
-                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-800/50 rounded-lg transition-colors"
+                className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         </div>

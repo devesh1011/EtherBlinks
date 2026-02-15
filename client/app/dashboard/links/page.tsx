@@ -207,6 +207,7 @@ export default function LinksPage() {
           type="button"
           onClick={handleGenerate}
           disabled={!isFormValid || isLoading}
+          variant="shimmer"
         >
           <Link2 className="mr-2 h-4 w-4" />{" "}
           {isLoading ? "Generating..." : "Generate Link"}

@@ -30,6 +30,7 @@ import {
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import { NavGroup } from "@/lib/navigation";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const sidebarItems: NavGroup[] = [
   {
@@ -157,6 +158,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={sidebarItems} />
       </SidebarContent>
       <SidebarFooter>
+        <div className="flex flex-col gap-2 px-4 py-4">
+          <ConnectButton
+            accountStatus="avatar"
+            chainStatus="icon"
+            showBalance={false}
+          />
+        </div>
         <NavUser user={mockUser} />
       </SidebarFooter>
     </Sidebar>

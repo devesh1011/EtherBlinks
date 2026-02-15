@@ -19,6 +19,7 @@ import {
   Download,
   AlertCircle,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { etherlinkShadownet } from "@/lib/wagmi";
 
 interface ChargeRecord {
@@ -252,24 +253,26 @@ export default function PaymentHistoryPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
+          <Button
             onClick={exportCSV}
             disabled={sorted.length === 0}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-800/50 hover:bg-zinc-800 rounded-lg transition-colors disabled:opacity-50"
+            variant="shimmer"
+            size="sm"
           >
             <Download className="h-4 w-4" />
             Export
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={fetchCharges}
             disabled={isLoading}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-800/50 hover:bg-zinc-800 rounded-lg transition-colors disabled:opacity-50"
+            variant="shimmer"
+            size="sm"
           >
             <RefreshCcw
               className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
             />
             Refresh
-          </button>
+          </Button>
         </div>
       </div>
 

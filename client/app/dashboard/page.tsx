@@ -1,4 +1,5 @@
 import { Zap, Users, Wallet, ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   return (
@@ -8,9 +9,9 @@ export default function DashboardPage() {
           Dashboard
         </h2>
         <div className="flex items-center gap-2">
-          <button className="inline-flex h-9 items-center justify-center rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-300">
+          <Button variant="shimmer" size="sm">
             Create Blink
-          </button>
+          </Button>
         </div>
       </div>
 

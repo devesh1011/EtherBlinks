@@ -6,12 +6,12 @@ export default function Home() {
   return (
     <>
       <HeroSection
-        title="EtherBlinks"
+        title="EtherBlinks — Built for Etherlink"
         subtitle={{
           regular: "Programmable Micropayments for ",
           gradient: "the AI Economy",
         }}
-        description="Empowering AI agents to transact seamlessly. Integrate blink-fast micropayments into your applications with just one line of code."
+        description="Accept one-time payments, recurring subscriptions, and machine-to-machine micropayments — settled instantly in USDC on Etherlink. Built for AI agents and the next generation of digital commerce."
         ctaText="Get Started"
         ctaHref="/dashboard"
         bottomImage={{

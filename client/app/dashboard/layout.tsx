@@ -7,7 +7,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function DashboardLayout({
   children,
@@ -22,13 +21,6 @@ export default function DashboardLayout({
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-          </div>
-          <div className="flex items-center gap-3">
-            <ConnectButton
-              accountStatus="full"
-              chainStatus="icon"
-              showBalance={true}
-            />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
