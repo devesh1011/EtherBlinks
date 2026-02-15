@@ -28,7 +28,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
 import { NavGroup } from "@/lib/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
@@ -126,12 +125,6 @@ const sidebarItems: NavGroup[] = [
   },
 ];
 
-const mockUser = {
-  name: "Devesh",
-  email: "devesh@etherblinks.com",
-  avatar: "https://github.com/shadcn.png",
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props} variant="inset">
@@ -165,7 +158,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             showBalance={false}
           />
         </div>
-        <NavUser user={mockUser} />
       </SidebarFooter>
     </Sidebar>
   );
