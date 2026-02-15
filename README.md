@@ -1,218 +1,146 @@
-# EtherBlink
+# EtherBlinks
 
-EtherBlink transforms blockchain actions into shareable links for receiving tips, selling items, and accepting payments on the Etherlink blockchain.
+**Programmable Micropayments for the AI Economy**
 
-## 🚀 What It Does
+EtherBlinks is a full-stack payments infrastructure built on [Etherlink](https://etherlink.com) that lets merchants accept one-time payments, recurring subscriptions, and machine-to-machine micropayments — all settled in USDC on-chain.
 
-EtherBlink allows creators and businesses to:
-- **Receive Tips**: Generate shareable links for receiving cryptocurrency tips from your audience
-- **Sell Items**: Create payment links for selling digital or physical items with secure transactions
-- **Share Anywhere**: Share your blockchain action links on any platform - social media, websites, or messaging apps
+---
 
-## 🏗️ Architecture Overview
+## Why EtherBlinks?
 
-### Tech Stack
-- **Frontend**: Next.js 14 with App Router, TypeScript, Tailwind CSS
-- **Blockchain**: Etherlink Testnet
-- **Wallet Integration**: RainbowKit + Wagmi for seamless wallet connections
-- **State Management**: React hooks with TanStack Query for data fetching
+- **Instant shareable payment links** — Generate a URL, share it anywhere, get paid in USDC. No checkout pages, no middleware.
+- **On-chain subscriptions** — Recurring charges managed by a smart contract with spending caps, auto-retry, and one-click revocation. Users stay in control.
+- **x402 agentic payments** — Paywall any API endpoint behind HTTP 402. AI agents and scripts can pay-per-call with zero human interaction.
+- **Merchant SDK** — A single `npm install @etherblinks/sdk` gives you checkout URLs, webhook verification, and USDC amount helpers.
+- **Relayer service** — A self-hosted daemon that indexes on-chain subscription policies, executes charges on schedule, and fires webhooks to your backend.
 
-### Core Components
+---
 
-#### 1. **URL Shortening System**
+## Architecture
+
 ```
-https://etherblinks.vercel.app/a/{action-type}-{short-id}
+┌────────────┐      ┌─────────────┐      ┌──────────────────┐
+│  Client     │◄────►│  Relayer     │◄────►│  Etherlink       │
+│  (Next.js)  │      │  (Node/Bun)  │      │  Smart Contracts │
+└──────┬──────┘      └──────┬──────┘      └──────────────────┘
+       │                    │
+       │   Supabase (DB)    │
+       └────────────────────┘
 ```
 
-**Examples:**
-- `https://etherblinks.vercel.app/a/tip-jdahagecew` - Send a tip
+| Component | What it does |
+|-----------|-------------|
+| **client/** | Next.js 16 dashboard — create links, manage subscriptions, x402 endpoints, merchant analytics |
+| **contracts/** | Solidity — `SubscriptionManager` (recurring charges, spending caps, protocol fee) + `MockUSDC` (test token) |
+| **relayer/** | Off-chain service — indexes `PolicyCreated` events, executes scheduled charges, delivers webhooks |
+| **sdk/** | `@etherblinks/sdk` — TypeScript helpers for checkout URLs, webhook signature verification, USDC formatting |
 
-**Features:**
-- **Readable**: Action type is visible in the URL
-- **Secure**: Short IDs are cryptographically random (12 characters)
-- **No Data Loss**: Full blockchain data stored in database
-- **Customizable**: Easy to add new action types
+---
 
+## Key Features
 
-## 🔧 Technical Implementation
+### Payment Links
 
-### 1. **Etherlink Integration**
+Turn any blockchain action into a short URL:
 
-#### Chain Configuration (`lib/wagmi.ts`)
+```
+https://etherblinks.vercel.app/a/tip-jdahagecew
+```
+
+Share on social media, embed in websites, or print as QR codes. Recipients connect a wallet, confirm the transaction, done.
+
+### Recurring Subscriptions
+
+Powered by the `SubscriptionManager` smart contract:
+
+- Merchants set amount + interval (weekly, monthly, custom)
+- Subscribers approve once with a spending cap
+- The relayer auto-charges on schedule — no user action needed
+- Subscribers can revoke anytime; the contract enforces caps
+- 2.5% protocol fee, transparent on-chain
+
+### x402 Agentic Payments
+
+Implement the [x402 protocol](https://www.x402.org/) to paywall any HTTP endpoint:
+
+1. Client requests a resource → server returns **HTTP 402** with price & wallet
+2. Client sends USDC on-chain → retries with the tx hash in an `X-PAYMENT` header
+3. Server verifies the transfer on-chain → returns the resource
+
+This lets AI agents, bots, and scripts autonomously pay for API calls without API keys or billing accounts.
+
+### Merchant SDK
+
+```bash
+npm install @etherblinks/sdk
+```
+
 ```typescript
-export const etherlinkTestnet: Chain = {
-  id: 128123, // Etherlink Testnet Chain ID
-  name: 'Etherlink Testnet',
-  nativeCurrency: {
-    name: 'Tezos',
-    symbol: 'XTZ', // Native symbol is XTZ
-    decimals: 18,
-  },
-  rpcUrls: {
-    default: { http: ['https://node.ghostnet.etherlink.com'] },
-  },
-  blockExplorers: {
-    default: { 
-      name: 'Etherlink Testnet Explorer', 
-      url: 'https://testnet.explorer.etherlink.com' 
-    },
-  },
-  testnet: true,
-};
+import { createCheckoutUrl, verifyWebhook, formatUSDC } from "@etherblinks/sdk";
+
+const url = createCheckoutUrl({
+  merchant: "0x...",
+  amount: "5.00",
+  interval: "monthly",
+});
 ```
 
-#### Key Features:
-- **EVM Compatibility**: Full Ethereum compatibility
-- **Fast Transactions**: Sub-second finality
-- **Low Fees**: Cost-effective transactions
-- **Tezos Native**: Uses XTZ as native currency
+---
 
-### 2. **Action Types**
-
-#### Tip Actions
-- **Purpose**: Receive cryptocurrency tips
-- **Parameters**: `recipient_address`, `tip_amount_eth`, `description`
-- **Transaction**: Direct ETH transfer to recipient
-
-#### NFT Sale Actions
-- **Purpose**: Sell NFTs with instant payment
-- **Parameters**: `contract_address`, `token_id`, `price`, `description`
-- **Transaction**: Contract interaction with payment
-
-### 3. **API Endpoints**
-
-#### Create Action (`/api/create-action`)
-```typescript
-POST /api/create-action
-{
-  "action_type": "tip" | "nft_sale",
-  "recipient_address": "0x...", // For tips
-  "tip_amount_eth": "0.01", // For tips
-  "contract_address": "0x...", // For NFT sales
-  "token_id": "42", // For NFT sales
-  "price": "1.5", // For NFT sales
-  "description": "Optional description"
-}
-```
-
-#### Execute Action (`/api/execute/[id]`)
-- **GET**: Retrieve action metadata for frontend
-- **POST**: Generate transaction object for wallet
-- **PUT**: Legacy metadata endpoint for compatibility
-
-### 4. **Frontend Architecture**
-
-#### Page Structure
-```
-app/
-├── page.tsx                 # Landing page with animations
-├── create-link/
-│   └── page.tsx            # Link creation form
-├── a/[data]/
-│   └── page.tsx            # Action execution page
-├── api/
-│   ├── create-action/
-│   │   └── route.ts        # Action creation API
-│   └── execute/[id]/
-│       └── route.ts        # Action execution API
-└── components/
-    └── Header.tsx          # Navigation component
-```
-
-#### Key Features:
-- **QR Code Generation**: Instant QR codes for sharing
-- **Real-time Status**: Transaction status updates
-
-### 5. **Wallet Integration**
-
-#### RainbowKit Configuration
-```typescript
-// Custom dark theme
-darkTheme({
-  accentColor: '#38bdf8', // Cyan accent
-  borderRadius: 'medium',
-})
-```
-
-#### Supported Wallets:
-- MetaMask
-- WalletConnect
-
-### 6. **Transaction Flow**
-
-1. **Link Creation**: User fills form → API creates action → Returns short URL
-2. **Link Sharing**: Short URL shared across platforms
-3. **Link Execution**: User visits URL → Connects wallet → Confirms transaction
-4. **Transaction**: Smart contract interaction or direct transfer
-5. **Confirmation**: Real-time status updates and explorer links
-
-## 🛠️ Development Setup
+## Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- npm/yarn/pnpm
-- WalletConnect project ID
 
-### Environment Variables
-```bash
-# .env.local
-NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_project_id
-```
+- Node.js 18+ / Bun
+- A WalletConnect project ID
+- Supabase project (or self-hosted Postgres)
 
-### Installation
+### Quick Start
+
 ```bash
-# Clone repository
 git clone https://github.com/devesh1011/EtherBlinks
 cd EtherBlinks
 
-# Install dependencies
-npm install
+# Frontend
+cd client && cp .env.example .env.local   # fill in keys
+bun install && bun run dev
 
-# Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your values
+# Relayer (optional — needed for subscriptions)
+cd ../relayer && cp .env.example .env
+bun install && bun run dev
 
-# Run development server
-npm run dev
+# Contracts (optional — already deployed on Etherlink Shadownet)
+cd ../contracts
+npx hardhat compile
 ```
 
+### Environment Variables
 
-## 🚀 Deployment
+| Variable | Where | Purpose |
+|----------|-------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | client | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | client | Supabase public key |
+| `SUPABASE_SERVICE_ROLE_KEY` | client | Supabase admin key (server-side) |
+| `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` | client | WalletConnect integration |
+| `DATABASE_URL` | relayer | Postgres connection string |
+| `RELAYER_PRIVATE_KEY` | relayer | Wallet key for executing charges |
 
-### Vercel Deployment
-1. Connect GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
+---
 
-### Environment Variables for Production
-```bash
-SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
-NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_production_project_id
-```
+## Tech Stack
 
-## 🔒 Security Features
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 16, React 19, Tailwind CSS, RainbowKit, wagmi, viem |
+| Smart Contracts | Solidity 0.8, Hardhat, OpenZeppelin |
+| Relayer | Bun/Node, viem, pino, better-sqlite3 |
+| Database | Supabase (Postgres) |
+| Blockchain | Etherlink Shadownet (EVM, Chain ID 127823) |
 
-- **Cryptographic Short IDs**: Random 12-character IDs for URL shortening
-- **Input Validation**: Server-side validation for all user inputs
-- **Rate Limiting**: API rate limiting to prevent abuse
-- **HTTPS Only**: All production traffic over HTTPS
+---
 
-## 📱 Mobile Support
+## License
 
-- **Responsive Design**: Works seamlessly on all device sizes
-- **Touch Optimized**: Large touch targets and smooth interactions
-- **PWA Ready**: Can be installed as a Progressive Web App
-- **QR Code Sharing**: Easy mobile sharing via QR codes
+Apache-2.0
 
-## 🔄 Future Enhancements
-
-- **Multi-chain Support**: Support for other EVM chains
-- **Advanced NFT Features**: Batch sales, auctions, royalties
-- **Analytics Dashboard**: Track link performance and earnings
-- **Custom Domains**: White-label solutions for businesses
-- **Webhook Integration**: Real-time notifications for transactions
-- **Gas Optimization**: Smart gas estimation and optimization
-
-
-
-**Built with ❤️ for the Etherlink ecosystem :)**
+**Built for the Etherlink ecosystem.**
